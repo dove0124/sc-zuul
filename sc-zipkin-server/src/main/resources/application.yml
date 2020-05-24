@@ -1,0 +1,29 @@
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: http://${eureka.host:127.0.0.1}:${eureka.port:8761}/eureka/
+#  instance:
+#    #    leaseRenewalIntervalInSeconds: 10   # spring admin
+#    #    health-check-url-path: /actuator/health  # spring admin
+#    prefer-ip-address: true
+server:
+  #  port: 9411
+  compression:
+    # 是否开启压缩 默认false
+    enabled: true
+spring:
+  #  cloud:
+  #    config:
+  #      label: master
+  #      uri: http://localhost:9090
+  #      name: app-config
+  #      profile: dev
+  application:
+    name: sc-zipkin-server
+  main:
+    # 让应用以非web服务方式启动 server.port配置将会失效
+    web-application-type: none
+
+    
+    
+

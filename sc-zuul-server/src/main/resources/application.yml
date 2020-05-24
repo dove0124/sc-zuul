@@ -1,0 +1,72 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://${eureka.host:127.0.0.1}:${eureka.port:8761}/eureka/
+  instance:
+    leaseRenewalIntervalInSeconds: 10   # spring admin
+    health-check-url-path: /actuator/health  # spring admin
+    prefer-ip-address: true
+feign:
+  hystrix:
+    enabled: true
+ribbon:
+  ConnectTimeout: 6000
+  ReadTimeout: 6000
+  MaxAutoRetries: 0 #对第一次请求的服务的重试次数
+  MaxAutoRetriesNextServer: 0 #要重试的下一个服务的最大数量（不包括第一个服务）
+  OkToRetryOnAllOperations: false
+zuul:
+  retryable: true #开启重试，D版之后默认为false，需要手动开启
+  ribbon:
+    eager-load:
+      enabled: false #开启饥饿加载
+  routes:
+    client-a:
+      path: /sc-user-service/**
+      serviceId: sc-user-service
+    client-b:
+      path: /user-service/**
+      serviceId: user-service
+    client-c:
+      path: /node-sidecar/**
+      serviceId: node-sidecar
+  ribbonIsolationStrategy: THREAD
+  threadPool:
+    useSeparateThreadPools: true
+    threadPoolKeyPrefix: zuulgateway
+  max:
+    host:
+      max-per-route-connections: 200
+      max-total-connections: 500
+  host:
+    socket-timeout-millis: 5000
+    connect-timeout-millis: 10000
+  ratelimit:
+    key-prefix: springcloud-book #按粒度拆分的临时变量key前缀
+    enabled: true #启用开关
+    repository: IN_MEMORY #key存储类型，默认是IN_MEMORY本地内存，此外还有多种形式
+    behind-proxy: true #表示代理之后
+    default-policy: #全局限流策略，可单独细化到服务粒度
+      limit: 80 #在一个单位时间窗口的请求数量
+      quota: 1 #在一个单位时间窗口的请求时间限制
+      refresh-interval: 5 #单位时间窗口
+      type:
+        - user #可指定用户粒度
+        - origin #可指定客户端地址粒度
+        - url #可指定url粒度
+hystrix:
+  threadpool:
+    default:
+      coreSize: 20
+      maximumSize: 50
+      maxQueueSize: -1
+      allowMaximumSizeToDivergeFromCoreSize: true
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+        isolation:
+          thread:
+            interruptOnTimeout: false
+            timeoutInMilliseconds: 15000

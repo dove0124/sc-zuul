@@ -1,0 +1,26 @@
+server:
+  port: ${PORT:8720}
+#spring:
+#  application:
+#    name: user-service
+#  cloud:
+#    config:
+#      uri: ${CONFIG_SERVER_URL:http://localhost:8710}
+#      discovery:
+#        enabled: true
+#        serviceId: user-service
+
+spring:
+  cloud:
+    config:
+      label: master
+      #      uri: http://localhost:9090
+      discovery:
+        enabled: true
+        service-id: sc-config-server
+      name: app-config, sluth-config
+      profile: dev
+  application:
+    name: user-service
+
+

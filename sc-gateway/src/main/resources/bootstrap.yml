@@ -1,0 +1,15 @@
+spring:
+  cloud:
+    config:
+      label: master
+#      uri: http://localhost:9090
+      discovery:
+        enabled: true
+        service-id: sc-config-server
+      name: app-config, sluth-config
+      profile: dev
+  application:
+    name: sc-gateway
+server:
+  port: 6666
+

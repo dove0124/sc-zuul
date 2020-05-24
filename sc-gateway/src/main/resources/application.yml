@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: sc-gateway
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lowerCaseServiceId: true
+
+      routes:
+#        - id: cardservice
+#          uri: lb://sc-consumer
+#          predicates:
+#            - Path=/consumer/**
+#          filters:
+#            - RewritePath=/consumer/(?<path>.*), /$\{path}
+        - id: sc-user-service
+          uri: lb://sc-user-service
+          predicates:
+            - Path=/sc-user-service/**
+          filters:
+#            - RewritePath=/sc-user-service/(?<path>.*), /$\{path}
+            - GwSwaggerHeaderFilter
+            - StripPrefix=1
+#        - id: prescriptionservice
+#          uri: lb://prescriptionservice
+#          predicates:
+#            - Path=/prescription/**
+#          filters:
+#            - RewritePath=/prescription/(?<path>.*), /$\{path}
+
+eureka:
+  client:
+    service-url: #指定注册中心的地址，以便使用服务发现功能
+      defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level: #调整相关包的 log 级别，以便排查问题
+    org.springframework.cloud.gateway: debug
